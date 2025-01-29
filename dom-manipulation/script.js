@@ -13,13 +13,16 @@ let quotes = [
     category: "Inspiration",
   },
 ];
-
 // DOM Elements
 const quoteDisplay = document.getElementById("quoteDisplay");
 const newQuoteButton = document.getElementById("newQuote");
 const categoryFilter = document.getElementById("categoryFilter");
 const newQuoteText = document.getElementById("newQuoteText");
 const newQuoteCategory = document.getElementById("newQuoteCategory");
+
+if (quoteDisplay) {
+  quoteDisplay.innerHTML = "Welcome! Click the button to see a quote.";
+}
 
 // Function to Display a Random Quote
 function showRandomQuote() {
