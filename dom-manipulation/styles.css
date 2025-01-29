@@ -1,0 +1,37 @@
+body {
+  font-family: Arial, sans-serif;
+  text-align: center;
+  margin: 50px;
+  background-color: #f4f4f4;
+}
+
+h1 {
+  color: #333;
+}
+
+#quoteContainer {
+  background: white;
+  padding: 20px;
+  margin: 20px auto;
+  border-radius: 5px;
+  width: 50%;
+  box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
+
+button {
+  padding: 10px 15px;
+  margin-top: 10px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+  border-radius: 5px;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+#addQuoteSection {
+  margin-top: 20px;
+}
