@@ -30,7 +30,12 @@ function showRandomQuote() {
   let filteredQuotes = quotes.filter(
     (quote) => selectedCategory === "all" || quote.category === selectedCategory
   );
-
+  if (filteredQuotes.length === 0) {
+    if (quoteDisplay) {
+      quoteDisplay.innerText = "No quotes available for this category.";
+    }
+    return;
+  }
   if (filteredQuotes.length === 0) {
     quoteDisplay.innerText = "No quotes available for this category.";
     return;
