@@ -19,7 +19,9 @@ function showRandomQuote() {
   const randomIndex = Math.floor(Math.random() * quotes.length);
   const quote = quotes[randomIndex];
   const quoteDisplay = document.getElementById("quoteDisplay");
-  quoteDisplay.innerText = `"${quote.text}" - ${quote.category}`;
+  if (quoteDisplay) {
+    quoteDisplay.innerText = `"${quote.text}" - ${quote.category}`;
+  }
 }
 
 // Function to create and add a new quote form
@@ -50,8 +52,10 @@ function createAddQuoteForm() {
 
 // Function to add a new quote to the array and display it
 function addQuote() {
-  const quoteText = document.getElementById("quoteText").value;
-  const quoteCategory = document.getElementById("quoteCategory").value;
+  const quoteTextElement = document.getElementById("quoteText");
+  const quoteText = quoteTextElement ? quoteTextElement.value : "";
+  const quoteCategoryElement = document.getElementById("quoteCategory");
+  const quoteCategory = quoteCategoryElement ? quoteCategoryElement.value : "";
 
   if (quoteText && quoteCategory) {
     quotes.push({ text: quoteText, category: quoteCategory });
