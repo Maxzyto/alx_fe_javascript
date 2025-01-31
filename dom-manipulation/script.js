@@ -18,12 +18,12 @@ let quotes = JSON.parse(localStorage.getItem("quotes")) || [
 
 let selectedCategory = localStorage.getItem("selectedCategory") || "all";
 
-// Function to save quotes to Local Storage
+// Save quotes to local storage
 function saveQuotes() {
   localStorage.setItem("quotes", JSON.stringify(quotes));
 }
 
-// Function to show a single random quote
+// Show a single random quote
 function showRandomQuote() {
   const quoteDisplay = document.getElementById("quoteDisplay");
   quoteDisplay.innerHTML = "";
@@ -46,7 +46,7 @@ function showRandomQuote() {
   quoteDisplay.appendChild(quoteElement);
 }
 
-// Function to populate categories dynamically
+// Populate categories dynamically
 function populateCategories() {
   const categoryFilter = document.getElementById("categoryFilter");
   categoryFilter.innerHTML = `<option value="all">All Categories</option>`;
@@ -63,15 +63,28 @@ function populateCategories() {
   categoryFilter.value = selectedCategory;
 }
 
-// Function to filter quotes based on selected category
+// Filter quotes based on selected category
 function filterQuotes() {
   const categoryFilter = document.getElementById("categoryFilter");
   selectedCategory = categoryFilter.value;
   localStorage.setItem("selectedCategory", selectedCategory);
-  showRandomQuote(); // Show a new quote based on the selection
+  showRandomQuote();
 }
 
-// Function to add a new quote
+// Create and append the "Add Quote" form dynamically
+function createAddQuoteForm() {
+  const formContainer = document.getElementById("addQuoteForm");
+
+  formContainer.innerHTML = `
+        <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
+        <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
+        <button id="addQuoteButton">Add Quote</button>
+    `;
+
+  document.getElementById("addQuoteButton").addEventListener("click", addQuote);
+}
+
+// Add a new quote
 function addQuote() {
   const newQuoteText = document.getElementById("newQuoteText").value.trim();
   const newQuoteCategory = document
@@ -88,7 +101,7 @@ function addQuote() {
   saveQuotes();
 
   populateCategories();
-  showRandomQuote(); // Show the newly added quote immediately
+  showRandomQuote();
 
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
@@ -96,8 +109,22 @@ function addQuote() {
   alert("New quote added successfully!");
 }
 
-// Function to fetch new quotes from a simulated server
-async function syncQuotesWithServer() {
+// Export quotes to JSON file
+function exportQuotes() {
+  const dataStr = JSON.stringify(quotes, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "quotes.json";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+}
+
+// Fetch new quotes from a simulated server
+async function fetchQuotesFromServer() {
   try {
     const response = await fetch(API_URL);
     const serverQuotes = await response.json();
@@ -117,14 +144,14 @@ async function syncQuotesWithServer() {
       saveQuotes();
       populateCategories();
       showRandomQuote();
-      notifyUser("New quotes synced from the server!");
+      notifyUser("New quotes fetched from the server!");
     }
   } catch (error) {
-    console.error("Error syncing quotes:", error);
+    console.error("Error fetching quotes:", error);
   }
 }
 
-// Function to notify the user of updates
+// Notify user of updates
 function notifyUser(message) {
   const notification = document.createElement("div");
   notification.className = "notification";
@@ -142,29 +169,31 @@ function createUI() {
             <option value="all">All Categories</option>
         </select>
         <button id="newQuote">Show New Quote</button>
-        <input id="newQuoteText" type="text" placeholder="Enter a new quote" />
-        <input id="newQuoteCategory" type="text" placeholder="Enter quote category" />
-        <button id="addQuoteButton">Add Quote</button>
-        <button id="syncButton">Sync with Server</button>
+        <div id="addQuoteForm"></div>
+        <button id="exportButton">Export Quotes</button>
+        <button id="fetchServerButton">Fetch Quotes from Server</button>
     `;
   document.body.appendChild(container);
 
   document
     .getElementById("newQuote")
     .addEventListener("click", showRandomQuote);
-  document.getElementById("addQuoteButton").addEventListener("click", addQuote);
   document
-    .getElementById("syncButton")
-    .addEventListener("click", syncQuotesWithServer);
+    .getElementById("exportButton")
+    .addEventListener("click", exportQuotes);
+  document
+    .getElementById("fetchServerButton")
+    .addEventListener("click", fetchQuotesFromServer);
 }
 
 // Attach event listeners on DOM load
 document.addEventListener("DOMContentLoaded", () => {
   createUI();
+  createAddQuoteForm();
   populateCategories();
   showRandomQuote();
-  syncQuotesWithServer();
+  fetchQuotesFromServer();
 
   // Periodically fetch new data every 30 seconds
-  setInterval(syncQuotesWithServer, 30000);
+  setInterval(fetchQuotesFromServer, 30000);
 });
