@@ -103,6 +103,8 @@ function addQuote() {
   populateCategories();
   showRandomQuote();
 
+  postNewQuoteToServer(newQuote);
+
   document.getElementById("newQuoteText").value = "";
   document.getElementById("newQuoteCategory").value = "";
 
@@ -123,10 +125,14 @@ function exportQuotes() {
   document.body.removeChild(a);
 }
 
-// Fetch new quotes from a simulated server
+// Fetch new quotes from a simulated server (GET request)
 async function fetchQuotesFromServer() {
   try {
-    const response = await fetch(API_URL);
+    const response = await fetch(API_URL, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
     const serverQuotes = await response.json();
 
     if (serverQuotes.length > 0) {
@@ -148,6 +154,22 @@ async function fetchQuotesFromServer() {
     }
   } catch (error) {
     console.error("Error fetching quotes:", error);
+  }
+}
+
+// Post a new quote to the server (POST request)
+async function postNewQuoteToServer(quote) {
+  try {
+    const response = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(quote),
+    });
+
+    const result = await response.json();
+    console.log("Quote successfully posted to server:", result);
+  } catch (error) {
+    console.error("Error posting quote:", error);
   }
 }
 
