@@ -219,3 +219,38 @@ document.addEventListener("DOMContentLoaded", () => {
   // Periodically fetch new data every 30 seconds
   setInterval(fetchQuotesFromServer, 30000);
 });
+// Sync quotes with the server
+async function syncQuotes() {
+  try {
+    const response = await fetch(API_URL, {
+      method: "GET",
+      headers: { "Content-Type": "application/json" },
+    });
+
+    const serverQuotes = await response.json();
+
+    if (serverQuotes.length > 0) {
+      const newQuotes = serverQuotes.map((post) => ({
+        text: post.title,
+        category: "Server Data",
+      }));
+
+      newQuotes.forEach((quote) => {
+        if (!quotes.some((q) => q.text === quote.text)) {
+          quotes.push(quote);
+        }
+      });
+
+      saveQuotes();
+      populateCategories();
+      showRandomQuote();
+      notifyUser("Quotes synchronized with the server!");
+    }
+  } catch (error) {
+    console.error("Error synchronizing quotes:", error);
+  }
+}
+function syncQuotes() {
+  throw new Error('Function not implemented.');
+}
+
