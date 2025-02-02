@@ -95,7 +95,7 @@ function addQuote() {
     alert("Please enter both a quote and a category.");
     return;
   }
-
+  syncQuotes();
   const newQuote = { text: newQuoteText, category: newQuoteCategory };
   quotes.push(newQuote);
   saveQuotes();
